@@ -10,13 +10,14 @@ module.exports = function(controller) {
 const dungeon = new BotkitConversation('dungeon', controller);
 const chasm = new BotkitConversation('chasm', controller);
 const left = new BotkitConversation('left', controller);
+const right = new BotkitConversation('right', controller);
 const foundGoldHook = new BotkitConversation('found_gold_hook', controller);
 const defeatedByBandits = new BotkitConversation('defeated_by_bandits', controller);
 const foundSilverHook = new BotkitConversation('found_silver_hook', controller);
 const fall = new BotkitConversation('fall', controller);
 const boss = new BotkitConversation('boss', controller);
 
-dungeon.ask('You are a treasure hunter. Crawling through derelict places to acquire copious amounts of gold. You wander through a forest and stumble upon an inconspicuous dungeon. Would you like to enter?' , [
+dungeon.ask('DUNGEON: You are a treasure hunter. Crawling through derelict places to acquire copious amounts of gold. You wander through a forest and stumble upon an inconspicuous dungeon. Would you like to enter?' , [
   {
     pattern: 'yes',
     handler: async function(answer, convo, bot) {
@@ -31,6 +32,12 @@ dungeon.ask('You are a treasure hunter. Crawling through derelict places to acqu
   },
   {
     pattern: 'sure',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('choosing_to_enter')
+    }
+  },
+  {
+    pattern: 'enter',
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('choosing_to_enter')
     }
@@ -58,9 +65,12 @@ dungeon.after(async(results, bot) => {
     if (results.dungeon.includes('sure')) {
       bot.beginDialog('chasm')
     }
+    if (results.dungeon.includes('enter')) {
+      bot.beginDialog('chasm')
+    }
 });
 
-chasm.ask("There is a chasm in front of you. Type 'hook' to attempt to swing across the chasm. You can also use the secret keywords you obtained from better grappling hooks. Or decide to go 'left' or 'right'.", [
+chasm.ask("CHASM: There is a chasm in front of you. Type 'hook' to attempt to swing across the chasm. You can also use the secret keywords you can obtain from better grappling hooks. Or decide to go 'left' or 'right'.", [
   {
     pattern: 'left',
     handler: async function(answer, convo, bot) {
@@ -103,6 +113,9 @@ chasm.after(async(results, bot) => {
   if (results.chasm.includes('left')) {
     bot.beginDialog('left')
   }
+  if (results.chasm.includes('right')) {
+    bot.beginDialog('right')
+  }
   if (results.chasm.includes('hook')) {
     let chance = Math.floor(Math.random() * Math.floor(10))
     if (chance >= 2) { bot.beginDialog('fall') }
@@ -118,7 +131,7 @@ chasm.after(async(results, bot) => {
   }
 })
 
-left.ask('There are two paths. On "path A", there are bandits camped out. If you defeat them, you can claim a Gold Hook with a 100% chance of crossing the chasm. Or on "path B", you can grab the Silver Hook unchallenged with a 40% chance of crossing the chasm.', [
+left.ask('PATHS: There are two paths. On "path A", there are bandits camped out. If you defeat them, you can claim a Gold Hook with a 100% chance of crossing the chasm. Perhaps there is a legendary blade to help win this fight. Or on "path B", you can grab the Silver Hook unchallenged with a 40% chance of crossing the chasm.', [
   {
     pattern: 'bandit',
     handler: async function(answer, convo, bot) {
@@ -151,6 +164,12 @@ left.ask('There are two paths. On "path A", there are bandits camped out. If you
   },
   {
     pattern: 'kill',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'sword',
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('bandits')
     }
@@ -195,6 +214,9 @@ left.after(async(results, bot) => {
   if (results.left.includes('kill')) {
     fight = true
   }
+  if (results.left.includes('sword')) {
+    fight = true
+  }
   if (results.left.includes('path a')) {
     fight = true
   }
@@ -222,47 +244,71 @@ left.after(async(results, bot) => {
 
 })
 
-foundGoldHook.say("You defeat the bandits and claimed the Gold Hook. 100% chance to cross the chasm. Use keyword 'uncharted'.");
+right.say('CAVE: You walk into a cave. Before you is a giant, stone slab. Carved into the material is a message. "Decipher and enter the secret code to obtain the legendary blade. The riddle is..."')
+right.ask('P raise, O mniscient W arriors, E loquent R adiance.', async(response, convo, bot, full_message) => {
+  if (response === "power" || response === "Power" || response === "POWER") {
+    await bot.reply(full_message, 'The stone slab rises to reveal a small room. You peer into the darkness and find a vibrant blade besides a corpse and broken armor. Beside is a letter that reads "A monster shattered my bones. My weapons were too weak. By the time I found this blade, I already lost so much blood. Take this sword and defeat the beast." You return to the chasm.');
+    await bot.reply(full_message, 'Use keyword "akira" to defeat bandits (100% chance) and stand your ground against the boss (80% chance).');
+    await bot.beginDialog('chasm')
+  } else {
+    await bot.reply(full_message, 'The stone slab does not tremor at all. A chill breezes past and the dungeon feels more eerie. The code you entered did not work. You head back half-hearted.')
+    await bot.beginDialog('chasm')
+  }
+}, {key: 'right'});
+
+foundGoldHook.say("You defeat the bandits and claimed the Gold Hook. 100% chance to cross the chasm. Use keyword 'uncharted'. You head back.");
+foundGoldHook.addGotoDialog('chasm')
+
+foundSilverHook.say("You journey into a quiet room to find the Silver Hook. 70% chance to cross the chasm. Use keyword 'indiana'. You head back.");
+foundSilverHook.addGotoDialog('chasm');
+
 defeatedByBandits.say("Defeated by bandits. Game over.");
-foundSilverHook.say("You journey into a quiet room to find the Silver Hook. 70% chance to cross the chasm. Use keyword 'indiana'.");
 fall.say("You fall down into the chasm. Game over.");
-boss.say("You successfully cross the chasm. You press forward and under a canopy. Before you is a giant arena. Emerging from the shadows is a giant Cyclops.")
 
-foundGoldHook.after(async(results, bot) => {
-  bot.beginDialog('chasm')
-})
-
-foundSilverHook.after(async(results, bot) => {
-  bot.beginDialog('chasm')
-})
+boss.say("ARENA: You successfully cross the chasm. You press forward and under a canopy. Before you is a giant arena. Emerging from the shadows is a giant Cyclops.")
 
 controller.addDialog(dungeon);
 controller.addDialog(chasm);
 controller.addDialog(left);
+controller.addDialog(right);
 controller.addDialog(foundGoldHook);
-controller.addDialog(defeatedByBandits);
 controller.addDialog(foundSilverHook);
+controller.addDialog(defeatedByBandits);
 controller.addDialog(fall);
 controller.addDialog(boss);
 
-controller.hears(['hello', 'hi', 'hey', 'how', 'who', 'what', 'when', 'where', 'why'], 'message', async(bot, message) => {
+controller.hears(['hello', 'hi', 'hey', 'how', 'who', 'what', 'when', 'where', 'why', 'start', 'begin', 'enter'], 'message', async(bot, message) => {
     bot.beginDialog('dungeon');
 });
 
-controller.hears('start dungeon', 'message,direct_message', async(bot, message) => {
-    bot.beginDialog('dungeon');
+controller.interrupts('reset', 'message', async(bot, message) => {
+    await bot.reply(message, 'The game resets.');
+    await bot.cancelAllDialogs();
+    await bot.beginDialog('dungeon');
 });
 
-controller.hears('start chasm', 'message,direct_message', async(bot, message) => {
-    bot.beginDialog('chasm');
+controller.interrupts('dungeon', 'message', async(bot, message) => {
+    await bot.reply(message, 'You head back to the entrance of the dungeon.');
+    await bot.cancelAllDialogs();
+    await bot.beginDialog('dungeon');
 });
 
-controller.interrupts('help', 'message', async(bot, message) => {
+controller.interrupts('chasm', 'message', async(bot, message) => {
+    await bot.reply(message, 'You head back to the chasm.');
+    await bot.cancelAllDialogs();
     await bot.beginDialog('chasm');
 });
 
-controller.hears('start left', 'message,direct_message', async(bot, message) => {
-    bot.beginDialog('left');
+controller.interrupts('paths', 'message', async(bot, message) => {
+    await bot.reply(message, 'You head to the paths to the left of the chasm.');
+    await bot.cancelAllDialogs();
+    await bot.beginDialog('left');
+});
+
+controller.interrupts('cave', 'message', async(bot, message) => {
+    await bot.reply(message, 'You head to the cave to the right of the chasm.');
+    await bot.cancelAllDialogs();
+    await bot.beginDialog('right');
 });
 
 }
