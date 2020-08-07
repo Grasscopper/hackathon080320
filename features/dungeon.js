@@ -49,25 +49,55 @@ dungeon.ask('DUNGEON: You are a treasure hunter. Crawling through derelict place
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('refusing_to_enter')
     }
+  },
+  {
+    pattern: 'Yes',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('choosing_to_enter')
+    }
+  },
+  {
+    pattern: 'Ok',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('choosing_to_enter')
+    }
+  },
+  {
+    pattern: 'Sure',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('choosing_to_enter')
+    }
+  },
+  {
+    pattern: 'Enter',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('choosing_to_enter')
+    }
+  },
+  {
+    pattern: 'No',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('refusing_to_enter')
+    }
   }
 ], {key: 'dungeon'});
 //parameters: dialogue to say, handle answer, name of variable to store response in
 
-dungeon.addMessage('Very well. Take this iron sword (MEDIUM chance to defeat enemies). Also, take this bronze grappling hook (LOW chance to cross chasms).', 'choosing_to_enter');
+dungeon.addMessage('Very well. Take this iron sword (MEDIUM chance to defeat enemies). Also, take this bronze grappling hook (LOW chance to cross chasms). When prompted, use keyword "sword" and "hook" respectively.', 'choosing_to_enter');
 
-dungeon.addMessage('Alright... Nothing ventured, nothing gained.', 'refusing_to_enter');
+dungeon.addMessage("Alright... Nothing ventured, nothing gained. Type 'reset' to start over.", 'refusing_to_enter');
 
 dungeon.after(async(results, bot) => {
-    if (results.dungeon.includes('yes')) {
+    if (results.dungeon.toLowerCase().includes('yes')) {
       bot.beginDialog('chasm')
     }
-    if (results.dungeon.includes('ok')) {
+    if (results.dungeon.toLowerCase().includes('ok')) {
       bot.beginDialog('chasm')
     }
-    if (results.dungeon.includes('sure')) {
+    if (results.dungeon.toLowerCase().includes('sure')) {
       bot.beginDialog('chasm')
     }
-    if (results.dungeon.includes('enter')) {
+    if (results.dungeon.toLowerCase().includes('enter')) {
       bot.beginDialog('chasm')
     }
 });
@@ -102,6 +132,36 @@ chasm.ask("CHASM: There is a chasm in front of you. Type 'hook' to attempt to sw
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('chasm_gold')
     }
+  },
+  {
+    pattern: 'Left',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('chasm_left')
+    }
+  },
+  {
+    pattern: 'Right',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('chasm_right')
+    }
+  },
+  {
+    pattern: 'Hook',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('chasm_bronze')
+    }
+  },
+  {
+    pattern: 'Indiana',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('chasm_silver')
+    }
+  },
+  {
+    pattern: 'Uncharted',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('chasm_gold')
+    }
   }
 ], {key: 'chasm'});
 
@@ -112,28 +172,28 @@ chasm.addMessage('You used the silver grappling hook.', 'chasm_silver')
 chasm.addMessage('You used the gold grappling hook.', 'chasm_gold')
 
 chasm.after(async(results, bot) => {
-  if (results.chasm.includes('left')) {
+  if (results.chasm.toLowerCase().includes('left')) {
     bot.beginDialog('left')
   }
-  if (results.chasm.includes('right')) {
+  if (results.chasm.toLowerCase().includes('right')) {
     bot.beginDialog('right')
   }
-  if (results.chasm.includes('hook')) {
+  if (results.chasm.toLowerCase().includes('hook')) {
     let chance = Math.floor(Math.random() * Math.floor(10))
     if (chance >= 2) { bot.beginDialog('fall') }
     else { bot.beginDialog('boss') }
   }
-  if (results.chasm.includes('indiana')) {
+  if (results.chasm.toLowerCase().includes('indiana')) {
     let chance = Math.floor(Math.random() * Math.floor(10))
     if (chance >= 4) { bot.beginDialog('fall') }
     else { bot.beginDialog('boss') }
   }
-  if (results.chasm.includes('uncharted')) {
+  if (results.chasm.toLowerCase().includes('uncharted')) {
     bot.beginDialog('boss')
   }
 })
 
-left.ask('PATHS: There are two paths. On "path A", there are bandits camped out. If you defeat them, you can claim a Gold Hook with a 100% chance of crossing the chasm. Perhaps there is a legendary blade to help win this fight. Or on "path B", you can grab the Silver Hook unchallenged with a MEDIUM chance of crossing the chasm.', [
+left.ask('PATHS: On "path A", there are bandits camped out. If you defeat them, you can claim a Gold Hook with a 100% chance of crossing the chasm. Type keyword "sword" to attack the bandits. Perhaps there is a legendary blade to easily win this fight. Or on "path B", you can grab the Silver Hook unchallenged with a MEDIUM chance of crossing the chasm. Type "back" to head back to the chasm.', [
   {
     pattern: 'akira',
     handler: async function(answer, convo, bot) {
@@ -187,6 +247,60 @@ left.ask('PATHS: There are two paths. On "path A", there are bandits camped out.
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('bandits')
     }
+  },
+  {
+    pattern: 'Akira',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('akira_bandits')
+    }
+  },
+  {
+    pattern: 'Bandit',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Bandits',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Gold',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Fight',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Attack',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Kill',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Sword',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
+  },
+  {
+    pattern: 'Path a',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('bandits')
+    }
   }
 ], {key: 'left'});
 
@@ -198,38 +312,38 @@ left.after(async(results, bot) => {
   let akira = false  //using legendary sword 'Akira' to fight the bandits
   let silver = false //avoid bandits, obtain silver hook
 
-  if (results.left.includes('bandit')) {
+  if (results.left.toLowerCase().includes('bandit')) {
     fight = true
   }
-  if (results.left.includes('bandits')) {
+  if (results.left.toLowerCase().includes('bandits')) {
     fight = true
   }
-  if (results.left.includes('gold')) {
+  if (results.left.toLowerCase().includes('gold')) {
     fight = true
   }
-  if (results.left.includes('fight')) {
+  if (results.left.toLowerCase().includes('fight')) {
     fight = true
   }
-  if (results.left.includes('attack')) {
+  if (results.left.toLowerCase().includes('attack')) {
     fight = true
   }
-  if (results.left.includes('kill')) {
+  if (results.left.toLowerCase().includes('kill')) {
     fight = true
   }
-  if (results.left.includes('sword')) {
+  if (results.left.toLowerCase().includes('sword')) {
     fight = true
   }
-  if (results.left.includes('path a')) {
+  if (results.left.toLowerCase().includes('path a')) {
     fight = true
   }
-  if (results.left.includes('akira')) {
+  if (results.left.toLowerCase().includes('akira')) {
     fight = true
     akira = true
   }
-  if (results.left.includes('path b')) {
+  if (results.left.toLowerCase().includes('path b')) {
     silver = true
   }
-  if (results.left.includes('silver')) {
+  if (results.left.toLowerCase().includes('silver')) {
     silver = true
   }
 
@@ -246,7 +360,8 @@ left.after(async(results, bot) => {
 
 })
 
-right.say('CAVE: You walk into a cave. Before you is a giant, stone slab. Carved into the material is a message. "Decipher and enter the secret code to obtain the legendary blade. The riddle is..."')
+right.say('CAVE: You walk into a cave. Before you is a giant, stone slab. Carved into the material is a message. "Decipher and enter the secret code to obtain the legendary blade." Type "back" to head back to the chasm.')
+right.say("The riddle is...")
 right.ask('P raise, O mniscient W arriors, E loquent R adiance.', async(response, convo, bot, full_message) => {
   if (response === "power" || response === "Power" || response === "POWER") {
     await bot.reply(full_message, 'The stone slab rises to reveal a small room. You peer into the darkness and find a vibrant blade besides a corpse and broken armor. Beside is a letter that reads "A monster shattered my bones. My weapons were too weak. By the time I found this blade, I already lost so much blood. Take this sword and defeat the beast." You return to the chasm.');
@@ -303,17 +418,65 @@ boss.ask('ARENA: You successfully cross the chasm. You press forward and under a
     handler: async function(answer, convo, bot) {
       await convo.gotoThread('sword_boss')
     }
+  },
+  {
+    pattern: 'Akira',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('akira_boss')
+    }
+  },
+  {
+    pattern: 'Sword',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('sword_boss')
+    }
+  },
+  {
+    pattern: 'Cyclops',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('sword_boss')
+    }
+  },
+  {
+    pattern: 'Fight',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('sword_boss')
+    }
+  },
+  {
+    pattern: 'Attack',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('sword_boss')
+    }
+  },
+  {
+    pattern: 'Kill',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('sword_boss')
+    }
+  },
+  {
+    pattern: 'run',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('run_away')
+    }
+  },
+  {
+    pattern: 'Run',
+    handler: async function(answer, convo, bot) {
+      await convo.gotoThread('run_away')
+    }
   }
 ], {key: 'boss'});
 
 boss.addMessage('The Cyclops howls and shakes the arena. Your iron sword wavers in the sound and your feet stumble. You engage in battle.', 'sword_boss')
 boss.addMessage('The Cyclops howls and shakes the arena. You draw Akira and its radiance silences the beast. You hold fast and engage in battle.', 'akira_boss')
+boss.addMessage("You run away from the beast. In your haste, you fail to notice the chasm. Game Over. Type 'reset' to start over.", "run_away")
 
 boss.after(async(results, bot) => {
-  console.log(results)
   let akira = false  //using legendary sword 'Akira' to fight the Cyclops
 
-  if (results.boss.includes('akira')) {
+  if (results.boss.toLowerCase().includes('akira')) {
     akira = true
   }
 
@@ -322,7 +485,7 @@ boss.after(async(results, bot) => {
     if (chance >= 2) { bot.beginDialog('win') }
     else { bot.beginDialog('defeated_by_boss') }
   }
-  else {
+  else if (!results.boss.toLowerCase().includes('run')) {
     let chance = Math.floor(Math.random() * Math.floor(10))
     if (chance >= 5) { bot.beginDialog('win') }
     else { bot.beginDialog('defeated_by_boss') }
@@ -330,7 +493,7 @@ boss.after(async(results, bot) => {
 
 })
 
-win.say("You dodge the swing of its fist, leap into the air, and pierce into the beast's chest. The Cyclops is defeated. Beyond its corpse, a treasure chest. You open the chest and find 20,000 gold. You win.");
+win.say("You dodge the swing of its fist, leap into the air, and pierce into the beast's chest. The Cyclops is defeated. Beyond its corpse, a treasure chest. You open the chest and find 20,000 gold. You win. Type 'reset' to start over.");
 
 defeatedByBoss.say("You fall to your knees. You cannot carry your blade any longer. The beast takes a moment to brush off the wounds you inflicted. It gains composure and stares at you. You are unable to move. The Cyclops punches you into the ground. Game Over. Type 'reset' to start over.")
 
@@ -363,6 +526,12 @@ controller.interrupts('dungeon', 'message', async(bot, message) => {
 });
 
 controller.interrupts('chasm', 'message', async(bot, message) => {
+    await bot.reply(message, 'You head back to the chasm.');
+    await bot.cancelAllDialogs();
+    await bot.beginDialog('chasm');
+});
+
+controller.interrupts('back', 'message', async(bot, message) => {
     await bot.reply(message, 'You head back to the chasm.');
     await bot.cancelAllDialogs();
     await bot.beginDialog('chasm');
