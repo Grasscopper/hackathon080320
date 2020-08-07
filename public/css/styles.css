@@ -10,12 +10,14 @@ html {
   font-size: 18px;
   background-color: #FFF;
   font-family: "helvetica", sans-serif;
+  background-image: url("https://www.zeldadungeon.net/wp-content/uploads/2019/01/zeldabacg.jpg");
 }
 
 #help {
+  0397B2
   font-size: 20px;
   text-align: center;
-  background-color: #a795ef;
+  background-color: #97C9D9;
   border-bottom: 1px solid #CCC;
 }
 
@@ -60,7 +62,7 @@ footer {
 }
 
 a {
-  color: #a795ef;
+  color: #97C9D9;
 }
 
 .copyurl {
@@ -99,7 +101,7 @@ div.input label {
 }
 .addon button:hover {
   background: #FFF;
-  color: #a795ef;
+  color: #97C9D9;
 }
 
 div.hr {
@@ -110,7 +112,7 @@ div.hr {
 }
 
 a.button {
-  border: 2px solid #a795ef;
+  border: 2px solid #97C9D9;
   font-weight: bold;
   margin: 0;
   border-radius: 3px;
@@ -180,10 +182,12 @@ a.button:hover {
   flex-direction: column-reverse;
   display: flex;
   overflow-y: auto;
+  background-color: #DBE4EE;
 }
 #message_window section div div {
   margin: 0.25rem;
   clear: both;
+  background-color: #DBE4EE;
 }
 #message_window footer {
   border-top: 1px solid #CCC;
@@ -200,7 +204,8 @@ a.button:hover {
   background: none;
   border: 0;
   cursor: pointer;
-  color: blue;
+  color: #054A91;
+  font-size: 16px;
   font-weight: bold;
 }
 #message_window form {
@@ -254,7 +259,7 @@ a.button:hover {
 }
 #message_window .message.outgoing {
   float: right;
-  background: #a795ef;
+  background: #97C9D9;
   color: white;
 }
 #message_window #message_replies {
@@ -277,15 +282,15 @@ a.button:hover {
 #message_window #message_replies a {
   text-decoration: none;
   display: block;
-  border: 1px solid #a795ef;
-  color: #a795ef;
+  border: 1px solid #97C9D9;
+  color: #97C9D9;
   border-radius: 16px;
   padding: 0.25rem 1rem;
   font-size: 14px;
   cursor: pointer;
 }
 #message_window #message_replies a:hover {
-  background: #a795ef;
+  background: #97C9D9;
   color: #FFF;
 }
 
