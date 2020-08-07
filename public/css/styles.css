@@ -12,6 +12,13 @@ html {
   font-family: "helvetica", sans-serif;
 }
 
+#help {
+  font-size: 20px;
+  text-align: center;
+  background-color: #a795ef;
+  border-bottom: 1px solid #CCC;
+}
+
 .wrapper {
   position: relative;
   max-width: 1000px;
