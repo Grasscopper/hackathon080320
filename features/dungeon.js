@@ -379,8 +379,8 @@ foundGoldHook.addGotoDialog('chasm')
 foundSilverHook.say("You journey into a quiet room to find the Silver Hook. MEDIUM chance to cross the chasm. Use keyword 'indiana'. You head back.");
 foundSilverHook.addGotoDialog('chasm');
 
-defeatedByBandits.say("Defeated by bandits. Game over. Type 'reset' to start over.");
-fall.say("You fall down into the chasm. Game over. Type 'reset' to start over.");
+defeatedByBandits.say("Defeated by bandits. GAME OVER. Type 'reset' to start over.");
+fall.say("You fall down into the chasm. GAME OVER. Type 'reset' to start over.");
 
 boss.ask('ARENA: You successfully cross the chasm. You press forward and under a canopy. Before you is a giant arena. Emerging from the shadows is a giant Cyclops. Attack with your "sword" for a MEDIUM chance to slay the beast. Or use the legendary blade keyword for a HIGH chance.', [
   {
@@ -471,7 +471,7 @@ boss.ask('ARENA: You successfully cross the chasm. You press forward and under a
 
 boss.addMessage('The Cyclops howls and shakes the arena. Your iron sword wavers in the sound and your feet stumble. You engage in battle.', 'sword_boss')
 boss.addMessage('The Cyclops howls and shakes the arena. You draw Akira and its radiance silences the beast. You hold fast and engage in battle.', 'akira_boss')
-boss.addMessage("You run away from the beast. In your haste, you fail to notice the chasm. Game Over. Type 'reset' to start over.", "run_away")
+boss.addMessage("You run away from the beast. In your haste, you fail to notice the chasm. GAME OVER. Type 'reset' to start over.", "run_away")
 
 boss.after(async(results, bot) => {
   let akira = false  //using legendary sword 'Akira' to fight the Cyclops
@@ -493,9 +493,9 @@ boss.after(async(results, bot) => {
 
 })
 
-win.say("You dodge the swing of its fist, leap into the air, and pierce into the beast's chest. The Cyclops is defeated. Beyond its corpse, a treasure chest. You open the chest and find 20,000 gold. You win. Type 'reset' to start over.");
+win.say("You dodge the swing of its fist, leap into the air, and pierce into the beast's chest. The Cyclops is defeated. Beyond its corpse, a treasure chest. You open the chest and find 20,000 gold. YOU WIN.");
 
-defeatedByBoss.say("You fall to your knees. You cannot carry your blade any longer. The beast takes a moment to brush off the wounds you inflicted. It gains composure and stares at you. You are unable to move. The Cyclops punches you into the ground. Game Over. Type 'reset' to start over.")
+defeatedByBoss.say("You fall to your knees. You cannot carry your blade any longer. The beast takes a moment to brush off the wounds you inflicted. It gains composure and stares at you. You are unable to move. The Cyclops punches you into the ground. GAME OVER. Type 'reset' to start over.")
 
 controller.addDialog(dungeon);
 controller.addDialog(chasm);
